@@ -3,8 +3,6 @@ from django.http import HttpResponse
 
 import asyncio
 import os
-import json
-import threading
 import openfga_sdk
 from openfga_sdk.client import OpenFgaClient
 from openfga_sdk.credentials import Credentials, CredentialConfiguration
@@ -24,14 +22,12 @@ configuration = openfga_sdk.ClientConfiguration(
 )
 
 
-async def read_authorization_models_async():
-    async with OpenFgaClient(configuration) as fga_client:
-        response = await fga_client.read_authorization_models()
-    return response
-
-
 def read_authorization_models():
-    return asyncio.run(read_authorization_models_async())
+    async def call():
+        async with OpenFgaClient(configuration) as fga_client:
+            response = await fga_client.read_authorization_models()
+        return response
+    return asyncio.run(call())
 
 
 def index(request):
