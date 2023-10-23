@@ -1,13 +1,12 @@
 # from django.shortcuts import render
 from django.http import HttpResponse
 
-import asyncio
 import os
-import openfga_sdk
-from openfga_sdk.client import OpenFgaClient
-from openfga_sdk.credentials import Credentials, CredentialConfiguration
+import openfga_sdk_sync
+from openfga_sdk_sync.client import OpenFgaClient
+from openfga_sdk_sync.credentials import Credentials, CredentialConfiguration
 
-configuration = openfga_sdk.ClientConfiguration(
+configuration = openfga_sdk_sync.ClientConfiguration(
     api_host='api.us1.fga.dev',
     store_id='01H8M76TB3P7EWC6T298WTJX2D',
     credentials=Credentials(
@@ -21,16 +20,9 @@ configuration = openfga_sdk.ClientConfiguration(
     )
 )
 
-
-def read_authorization_models():
-    async def call():
-        async with OpenFgaClient(configuration) as fga_client:
-            response = await fga_client.read_authorization_models()
-        return response
-    return asyncio.run(call())
+fga_client = OpenFgaClient(configuration)
 
 
-def index(request):
-    auth_models = read_authorization_models()
-
-    return HttpResponse(auth_models)
+def auth_models(request):
+    models = fga_client.read_authorization_models()
+    return HttpResponse(models)
