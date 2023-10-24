@@ -4,8 +4,8 @@ from django.http import HttpResponse
 import os
 import openfga_sdk
 import openfga_sdk.credentials
-import openfga_sdk_sync
-import openfga_sdk_sync.credentials
+import openfga_sdk.sync
+import openfga_sdk.sync.credentials
 
 
 # Async (Existing)
@@ -34,12 +34,12 @@ async def auth_models(request):
 
 # Synchronous (New, all imports subject to change)
 
-configuration_sync = openfga_sdk_sync.ClientConfiguration(
+configuration_sync = openfga_sdk.ClientConfiguration(
     api_host='api.us1.fga.dev',
     store_id='01H8M76TB3P7EWC6T298WTJX2D',
-    credentials=openfga_sdk_sync.credentials.Credentials(
+    credentials=openfga_sdk.sync.credentials.Credentials(
         method='client_credentials',
-        configuration=openfga_sdk_sync.credentials.CredentialConfiguration(
+        configuration=openfga_sdk.sync.credentials.CredentialConfiguration(
             api_issuer='fga.us.auth0.com',
             api_audience='https://api.us1.fga.dev/',
             client_id='P99BJ2XKlB1N8NdIPzN5Ew8mBegEz0FJ',
@@ -48,7 +48,7 @@ configuration_sync = openfga_sdk_sync.ClientConfiguration(
     )
 )
 
-fga_client_sync = openfga_sdk_sync.OpenFgaClient(configuration_sync)
+fga_client_sync = openfga_sdk.sync.OpenFgaClient(configuration_sync)
 
 
 def auth_models_sync(request):
